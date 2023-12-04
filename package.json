@@ -13,6 +13,7 @@
     "axios": "^1.6.2",
     "benchmark": "^2.1.4",
     "csvtojson": "^2.0.10",
-    "faker": "5.5.3"
+    "faker": "5.5.3",
+    "mississippi": "^4.0.0"
   }
 }

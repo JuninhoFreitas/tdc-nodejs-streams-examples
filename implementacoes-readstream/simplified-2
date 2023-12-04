@@ -1,0 +1,49 @@
+const { pipeline, Readable, Writable, PassThrough } = require('stream');
+const miss = require('mississippi');
+
+const readableStream = Readable.from(['Chunk 1', 'Chunk 2', 'Chunk 3']);
+
+const writableStream1 = new Writable({
+  write(chunk, encoding, callback) {
+    console.log(`Writable 1: ${chunk}`);
+    callback(chunk);
+  }
+});
+
+const writableStream2 = new Writable({
+  write(chunk, encoding, callback) {
+    console.log(`Writable 2: ${chunk}`);
+    callback(chunk);
+  }
+});
+
+const writableStream3 = new Writable({
+  write(chunk, encoding, callback) {
+    console.log(`Writable 3: ${chunk}`);
+    callback(chunk);
+  }
+});
+
+// Adicionando tratadores de eventos de erro para cada Writable Stream
+writableStream1.on('error', (err) => {
+  console.error('Error in Writable 1:', err);
+});
+
+writableStream2.on('error', (err) => {
+  console.error('Error in Writable 2:', err);
+});
+
+writableStream3.on('error', (err) => {
+  console.error('Error in Writable 3:', err);
+});
+
+const dualWriters = miss.pipeline(PassThrough(), writableStream2);
+
+// Usando pipeline com múltiplos destinos
+pipeline(readableStream, dualWriters, writableStream3, (err) => {
+  if (err) {
+    console.error('Pipeline failed.', err);
+  } else {
+    console.log('Pipeline succeeded.');
+  }
+});

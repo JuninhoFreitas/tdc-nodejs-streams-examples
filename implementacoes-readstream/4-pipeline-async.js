@@ -21,3 +21,20 @@ const fs = require("fs");
   const end = process.hrtime(start);
   console.log(`Tempo de execução: ${end[0]}s ${end[1] / 1000000}ms`);
 })();
+
+const { pipeline } = require("stream/promises");
+const { Writable } = require("stream");
+const fs = require("fs");
+const zlib = require("zlib");
+
+(async () => {
+  await pipeline(
+    fs.createReadStream("access.log"),
+    zlib.createGzip(),
+    fs.createWriteStream("archive.tar.gz")
+  ).then(()=>{
+    console.log("Finished reading the file.");
+  }).catch(err=>{
+    console.error("An error occurred:", err);
+  })
+})();

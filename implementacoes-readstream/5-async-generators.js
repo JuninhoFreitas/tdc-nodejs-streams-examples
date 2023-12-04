@@ -4,13 +4,11 @@ const fs = require("fs");
 
 console.profile("5-async-generators");
 const start = process.hrtime();
+
+
 const readStream = fs.createReadStream("access.log");
-const writeStream = new Writable({
-  write(chunk, encoding, callback) {
-    console.log(`[Async-Generators] Received ${chunk.length} bytes of data.`);
-    callback();
-  },
-});
+
+
 
 async function* asyncGenerator() {
   yield* readStream;
